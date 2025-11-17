@@ -393,7 +393,8 @@
 
                 <!-- 3. Result/Loading Area --><div id="gemini-result-container" class="mt-6">
                     <!-- Loader will be injected here --></div>
-                <div id="gemini-result-text" class="mt-6 p-4 bg-black/40 rounded-lg text-lg text-gray-200 leading-relaxed" style="display: none;">
+                <!-- CHANGE: Changed text-lg to text-base for smaller font -->
+                <div id="gemini-result-text" class="mt-6 p-4 bg-black/40 rounded-lg text-base text-gray-200 leading-relaxed" style="display: none;">
                     <!-- Generated text will go here --></div>
                 <div id="gemini-error" class="mt-4 text-red-400 font-medium"></div>
 
@@ -406,7 +407,8 @@
         // --- ✨ Gemini API Configuration ---
         const API_KEY = ""; // Keep this empty as instructed
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
-        const SYSTEM_PROMPT = "You are a fun, cheerful, and encouraging birthday bot. You write short, sweet, and inspiring birthday messages (2-3 sentences max).";
+        // CHANGE: Updated system prompt to be strictly 2 sentences maximum
+        const SYSTEM_PROMPT = "You are a fun, cheerful, and encouraging birthday bot. You must write a very concise and inspiring birthday message that is strictly 2 sentences maximum. Do not exceed 2 sentences.";
 
         /**
          * Fetches data from the Gemini API with exponential backoff.
