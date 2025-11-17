@@ -17,7 +17,6 @@
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* Removed overflow: hidden to allow natural page scrolling on mobile */
         }
 
         .font-pacifico {
@@ -77,6 +76,7 @@
             animation: gradient-flow-card 25s ease infinite;
             transition: opacity 0.7s ease-in; /* For fade-in transition */
             opacity: 0; 
+            /* REMOVED: position: relative; as background elements will be fixed */
         }
 
         @keyframes gradient-flow-card {
@@ -99,7 +99,7 @@
 
         .card-animate {
             animation: card-reveal 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-            position: relative; /* For z-index to work against balloons/poppers */
+            position: relative; 
             z-index: 30; /* Ensure card is above balloons/poppers */
         }
 
@@ -163,17 +163,31 @@
         }
 
 
-        /* --- Balloon Animations --- */
-
+        /* --- Balloon Animations (FIXED TO VIEWPORT) --- */
         .balloon-container {
-            position: absolute;
+            /* FIX: Use fixed position and vh/vw units to ensure animations are tied to the viewport, not the scrollable content */
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
             z-index: 10;
         }
+        
+        /* --- Party Popper Animations (FIXED TO VIEWPORT) --- */
+        .popper-container {
+            /* FIX: Use fixed position and vh/vw units */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh; /* Set height to 100vh so confetti animation can span the screen */
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 20; /* Above balloons, below card */
+        }
+
 
         .balloon {
             position: absolute;
@@ -254,17 +268,6 @@
         }
 
         /* --- Party Popper Animations --- */
-        .popper-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 20; /* Above balloons, below card */
-        }
-
         .popper {
             position: absolute;
             bottom: 0;
@@ -333,7 +336,6 @@
 <body class="bg-gray-100">
 
     <!-- Page 1: Surprise Page (Visible by default) -->
-    <!-- Changed h-screen to min-h-screen for better responsiveness -->
     <div id="page-1" class="min-h-screen w-full flex items-center justify-center p-6">
         <div class="text-center bg-white/30 backdrop-blur-md p-10 md:p-16 rounded-2xl shadow-2xl">
             <h1 class="font-pacifico text-4xl md:text-6xl text-white text-shadow mb-8">
@@ -349,10 +351,10 @@
     </div>
 
     <!-- Page 2: Card Page (Hidden by default) -->
-    <!-- Fix: Changed h-screen to min-h-screen and added py-10 padding to allow content to scroll on mobile -->
-    <div id="page-2" class="hidden min-h-screen w-full relative flex items-center justify-center p-6 py-10">
+    <!-- FIX: Replaced 'items-center justify-center' with 'flex-col items-center' to allow vertical scrolling -->
+    <div id="page-2" class="hidden min-h-screen w-full flex flex-col items-center p-6 py-10">
         
-        <!-- Balloon Container --><div class="balloon-container">
+        <!-- Balloon Container (FIXED position applied in CSS) --><div class="balloon-container">
             <div class="balloon"></div>
             <div class="balloon"></div>
             <div class="balloon"></div>
@@ -362,7 +364,7 @@
             <div class="balloon"></div>
         </div>
 
-        <!-- Party Popper Container --><div class="popper-container" id="popper-container"></div>
+        <!-- Party Popper Container (FIXED position applied in CSS) --><div class="popper-container" id="popper-container"></div>
 
 
         <!-- The Card Content --><div class="card-animate text-center bg-black/40 backdrop-blur-md p-10 md:p-16 rounded-2xl shadow-2xl max-w-2xl z-30">
@@ -566,7 +568,7 @@
                     page1.classList.add('hidden');
                     
                     // 4. Show page 2 (remove 'hidden')
-                    // 'flex' is used because it's our layout container
+                    // 'flex flex-col items-center' allows vertical expansion and scrolling
                     page2.classList.remove('hidden');
                     page2.style.display = 'flex';
                     
