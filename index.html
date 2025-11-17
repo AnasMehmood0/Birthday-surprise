@@ -17,7 +17,7 @@
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            overflow: hidden; /* Prevent scrollbars from animations */
+            /* Removed overflow: hidden to allow natural page scrolling on mobile */
         }
 
         .font-pacifico {
@@ -285,6 +285,7 @@
             height: 10px;
             background-color: var(--confetti-color);
             border-radius: 2px;
+            animation: confetti-fall var(--duration) linear forwards;
             opacity: 0;
         }
 
@@ -298,7 +299,7 @@
         /* Keyframes for individual confetti fall */
         @keyframes confetti-fall {
             0% { transform: translate(0, 0) rotateZ(0deg); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) rotateZ(var(--rot)) opacity 0; }
+            100% { transform: translate(var(--x), var(--y)) rotateZ(var(--rot)) opacity: 0; }
         }
 
 
@@ -331,7 +332,9 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Page 1: Surprise Page (Visible by default) --><div id="page-1" class="h-screen w-full flex items-center justify-center p-6">
+    <!-- Page 1: Surprise Page (Visible by default) -->
+    <!-- Changed h-screen to min-h-screen for better responsiveness -->
+    <div id="page-1" class="min-h-screen w-full flex items-center justify-center p-6">
         <div class="text-center bg-white/30 backdrop-blur-md p-10 md:p-16 rounded-2xl shadow-2xl">
             <h1 class="font-pacifico text-4xl md:text-6xl text-white text-shadow mb-8">
                 A Special Surprise...
@@ -345,7 +348,9 @@
         </div>
     </div>
 
-    <!-- Page 2: Card Page (Hidden by default) --><div id="page-2" class="hidden h-screen w-full relative flex items-center justify-center p-6">
+    <!-- Page 2: Card Page (Hidden by default) -->
+    <!-- Fix: Changed h-screen to min-h-screen and added py-10 padding to allow content to scroll on mobile -->
+    <div id="page-2" class="hidden min-h-screen w-full relative flex items-center justify-center p-6 py-10">
         
         <!-- Balloon Container --><div class="balloon-container">
             <div class="balloon"></div>
@@ -396,7 +401,7 @@
 
     <script>
         // --- ✨ Gemini API Configuration ---
-        const API_KEY = "AIzaSyAw-sS9h6WioN57i_nh69_lMkFaI_nM4vo"; // Keep this empty as instructed
+        const API_KEY = ""; // Keep this empty as instructed
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
         const SYSTEM_PROMPT = "You are a fun, cheerful, and encouraging birthday bot. You write short, sweet, and inspiring birthday messages (2-3 sentences max).";
 
@@ -491,22 +496,17 @@
             for (let i = 0; i < 30; i++) { // Number of confetti pieces
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-                const x = `${(Math.random() - 0.5) * 400}px`;
-                const y = `${-(Math.random() * 300 + 100)}px`;
-                const rot = `${Math.random() * 720}deg`;
-                const duration = `${Math.random() * 2 + 1.5}s`;
-                confetti.style.setProperty('--confetti-color', color);
-                confetti.style.setProperty('--x', x);
-                confetti.style.setProperty('--y', y);
-                confetti.style.setProperty('--rot', rot);
-                confetti.style.animation = `confetti-fall ${duration} linear forwards`;
-
+                confetti.style.setProperty('--confetti-color', confettiColors[Math.floor(Math.random() * confettiColors.length)]);
+                confetti.style.setProperty('--x', `${(Math.random() - 0.5) * 400}px`); /* Spread horizontally */
+                confetti.style.setProperty('--y', `${-(Math.random() * 300 + 100)}px`); /* Shoot upwards */
+                confetti.style.setProperty('--rot', `${Math.random() * 720}deg`); /* Random rotation */
+                confetti.style.setProperty('--duration', `${Math.random() * 2 + 1.5}s`); /* Random duration */
+                
                 // Start confetti from the popper's position
                 confetti.style.left = `${popperX}px`;
                 confetti.style.top = `${popperY}px`;
                 confetti.style.opacity = 1; // Make visible
-
+                
                 popperContainer.appendChild(confetti);
 
                 // Remove confetti after animation to prevent DOM clutter
@@ -610,4 +610,3 @@
 
 </body>
 </html>
-
