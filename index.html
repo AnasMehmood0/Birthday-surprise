@@ -76,7 +76,6 @@
             animation: gradient-flow-card 25s ease infinite;
             transition: opacity 0.7s ease-in; /* For fade-in transition */
             opacity: 0; 
-            /* REMOVED: position: relative; as background elements will be fixed */
         }
 
         @keyframes gradient-flow-card {
@@ -351,8 +350,8 @@
     </div>
 
     <!-- Page 2: Card Page (Hidden by default) -->
-    <!-- FIX: Replaced 'items-center justify-center' with 'flex-col items-center' to allow vertical scrolling -->
-    <div id="page-2" class="hidden min-h-screen w-full flex flex-col items-center p-6 py-10">
+    <!-- FIX: Removed flex centering classes (flex flex-col items-center) to enable native vertical scrolling. -->
+    <div id="page-2" class="hidden min-h-screen w-full block p-6 py-10">
         
         <!-- Balloon Container (FIXED position applied in CSS) --><div class="balloon-container">
             <div class="balloon"></div>
@@ -367,7 +366,9 @@
         <!-- Party Popper Container (FIXED position applied in CSS) --><div class="popper-container" id="popper-container"></div>
 
 
-        <!-- The Card Content --><div class="card-animate text-center bg-black/40 backdrop-blur-md p-10 md:p-16 rounded-2xl shadow-2xl max-w-2xl z-30">
+        <!-- The Card Content -->
+        <!-- FIX: Added mx-auto for horizontal centering and mt-16 for initial vertical positioning -->
+        <div class="card-animate text-center bg-black/40 backdrop-blur-md p-10 md:p-16 rounded-2xl shadow-2xl max-w-2xl z-30 mx-auto mt-16 md:mt-32">
             <!-- Sparkle background for the card --><div class="sparkle-background"></div>
 
             <h1 class="text-animate-1 font-pacifico text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-pink-300 to-red-400 mb-6">
@@ -568,12 +569,10 @@
                     page1.classList.add('hidden');
                     
                     // 4. Show page 2 (remove 'hidden')
-                    // 'flex flex-col items-center' allows vertical expansion and scrolling
                     page2.classList.remove('hidden');
-                    page2.style.display = 'flex';
+                    page2.style.display = 'block'; // Changed to block for proper flow
                     
-                    // 5. Trigger the fade-in for page 2 (slight delay for smoothness)
-                    // We force a reflow for the transition to apply correctly
+                    // 5. Trigger the fade-in for page 2
                     void page2.offsetWidth; // Force reflow
                     page2.style.opacity = 1;
 
